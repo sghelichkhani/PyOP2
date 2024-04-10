@@ -449,47 +449,49 @@ class LinuxGnuCompiler(Compiler):
     _debugflags = ("-O0", "-g")
 
     def sniff_compiler_version(self, cpp=False):
-        super(LinuxGnuCompiler, self).sniff_compiler_version()
-        if self.version >= Version("7.0"):
-            try:
-                # gcc-7 series only spits out patch level on dumpfullversion.
-                exe = self.cxx if cpp else self.cc
-                output = subprocess.run(
-                    [exe, "-dumpfullversion"],
-                    stdout=subprocess.PIPE,
-                    stderr=subprocess.PIPE,
-                    check=True,
-                    encoding="utf-8"
-                ).stdout
-                self.version = Version(output)
-            except (subprocess.CalledProcessError, UnicodeDecodeError, InvalidVersion):
-                pass
+        pass
+        # super(LinuxGnuCompiler, self).sniff_compiler_version()
+        # if self.version >= Version("7.0"):
+        #     try:
+        #         # gcc-7 series only spits out patch level on dumpfullversion.
+        #         exe = self.cxx if cpp else self.cc
+        #         output = subprocess.run(
+        #             [exe, "-dumpfullversion"],
+        #             stdout=subprocess.PIPE,
+        #             stderr=subprocess.PIPE,
+        #             check=True,
+        #             encoding="utf-8"
+        #         ).stdout
+        #         self.version = Version(output)
+        #     except (subprocess.CalledProcessError, UnicodeDecodeError, InvalidVersion):
+        #         pass
 
     @property
     def bugfix_cflags(self):
-        """Flags to work around bugs in compilers."""
-        ver = self.version
-        cflags = ()
-        if Version("4.8.0") <= ver < Version("4.9.0"):
-            # GCC bug https://gcc.gnu.org/bugzilla/show_bug.cgi?id=61068
-            cflags = ("-fno-ivopts",)
-        if Version("5.0") <= ver <= Version("5.4.0"):
-            cflags = ("-fno-tree-loop-vectorize",)
-        if Version("6.0.0") <= ver < Version("6.5.0"):
-            # GCC bug https://gcc.gnu.org/bugzilla/show_bug.cgi?id=79920
-            cflags = ("-fno-tree-loop-vectorize",)
-        if Version("7.1.0") <= ver < Version("7.1.2"):
-            # GCC bug https://gcc.gnu.org/bugzilla/show_bug.cgi?id=81633
-            cflags = ("-fno-tree-loop-vectorize",)
-        if Version("7.3") <= ver <= Version("7.5"):
-            # GCC bug https://gcc.gnu.org/bugzilla/show_bug.cgi?id=90055
-            # See also https://github.com/firedrakeproject/firedrake/issues/1442
-            # And https://github.com/firedrakeproject/firedrake/issues/1717
-            # Bug also on skylake with the vectoriser in this
-            # combination (disappears without
-            # -fno-tree-loop-vectorize!)
-            cflags = ("-fno-tree-loop-vectorize", "-mno-avx512f")
-        return cflags
+        return ()
+        # """Flags to work around bugs in compilers."""
+        # ver = self.version
+        # cflags = ()
+        # if Version("4.8.0") <= ver < Version("4.9.0"):
+        #     # GCC bug https://gcc.gnu.org/bugzilla/show_bug.cgi?id=61068
+        #     cflags = ("-fno-ivopts",)
+        # if Version("5.0") <= ver <= Version("5.4.0"):
+        #     cflags = ("-fno-tree-loop-vectorize",)
+        # if Version("6.0.0") <= ver < Version("6.5.0"):
+        #     # GCC bug https://gcc.gnu.org/bugzilla/show_bug.cgi?id=79920
+        #     cflags = ("-fno-tree-loop-vectorize",)
+        # if Version("7.1.0") <= ver < Version("7.1.2"):
+        #     # GCC bug https://gcc.gnu.org/bugzilla/show_bug.cgi?id=81633
+        #     cflags = ("-fno-tree-loop-vectorize",)
+        # if Version("7.3") <= ver <= Version("7.5"):
+        #     # GCC bug https://gcc.gnu.org/bugzilla/show_bug.cgi?id=90055
+        #     # See also https://github.com/firedrakeproject/firedrake/issues/1442
+        #     # And https://github.com/firedrakeproject/firedrake/issues/1717
+        #     # Bug also on skylake with the vectoriser in this
+        #     # combination (disappears without
+        #     # -fno-tree-loop-vectorize!)
+        #     cflags = ("-fno-tree-loop-vectorize", "-mno-avx512f")
+        # return cflags
 
 
 class LinuxClangCompiler(Compiler):
